@@ -9,23 +9,13 @@ import SwiftUI
 import SwiftData
 import Combine
 
-// ─────────────────────────────────────────────
 // enum: نوع فيه خيارات محددة فقط
 // هنا خيارات الترتيب اللي تطلع في قائمة الفلتر
-// ─────────────────────────────────────────────
 enum SortOption {
-    case bookmark     // ترتيب حسب البوكمارك (المحفوظة أول)
-    case entryDate    // ترتيب حسب التاريخ (الأحدث أول)
+    case bookmark
+    case entryDate
 }
-
-// ─────────────────────────────────────────────
 // الـ ViewModel (الـ VM في MVVM)
-// فيه "المنطق": البحث، الترتيب، الإضافة، التعديل، الحذف
-// الواجهات (Views) ما تسوي هالأشياء بنفسها، تطلبها من هنا
-//
-// ObservableObject: أي تغيير في المتغيرات اللي عليها @Published
-// يخلي الواجهات اللي تستخدم الـ ViewModel تتحدث تلقائياً
-// ─────────────────────────────────────────────
 class JournalViewModel: ObservableObject {
 
     // النص اللي يكتبه المستخدم في خانة البحث
@@ -34,13 +24,11 @@ class JournalViewModel: ObservableObject {
     // نوع الترتيب الحالي (يبدأ بالتاريخ)
     @Published var sortOption: SortOption = .entryDate
 
-    // ترجع المذكرات بعد البحث والترتيب، وهذي اللي تنعرض في القائمة
-    // تاخذ كل المذكرات من الداتابيس، وترجع نسخة مفلترة ومرتبة
+    // فنكشن تستقبل كل الجورنالز من الداتابيس وتحطهم بالاراي
     func filteredJournals(from journals: [Journal]) -> [Journal] {
+        // ناخذ نسخه من الجورنالز داخل المتغير ذا وبنشتغل عليه
         var result = journals
 
-        // 1) البحث: إذا فيه نص بحث، نخلي بس المذكرات اللي عنوانها أو محتواها فيه النص
-        //    (localizedCaseInsensitiveContains = ما يفرق بين الحروف الكبيرة والصغيرة)
         if !searchText.isEmpty {
             result = result.filter {
                 $0.title.localizedCaseInsensitiveContains(searchText) ||
@@ -63,21 +51,19 @@ class JournalViewModel: ObservableObject {
         return result
     }
 
-    // تضيف مذكرة جديدة للداتابيس
-    // context = الاتصال بالداتابيس (SwiftData)، insert تحفظ المذكرة فيه
+    // نضيف جورنال جديدة للداتابيس
+    // context = الاتصال بالداتابيس (SwiftData)
     func addJournal(title: String, content: String, context: ModelContext) {
         let newJournal = Journal(title: title, content: content)
         context.insert(newJournal)
     }
 
-    // تعدّل عنوان ومحتوى مذكرة موجودة
     // ما نحتاج نستدعي save لأن Journal كلاس و SwiftData يحفظ التعديل تلقائياً
     func updateJournal(_ journal: Journal, title: String, content: String) {
         journal.title = title
         journal.content = content
     }
 
-    // تحذف المذكرة من الداتابيس
     func deleteJournal(_ journal: Journal, context: ModelContext) {
         context.delete(journal)
     }

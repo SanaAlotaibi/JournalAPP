@@ -6,32 +6,21 @@
 import SwiftUI
 import SwiftData
 
-// ─────────────────────────────────────────────
-// شيت إضافة مذكرة جديدة أو تعديل مذكرة موجودة
-// journal = nil  → مذكرة جديدة
-// journal != nil → تعديل
-// ─────────────────────────────────────────────
 struct JournalEditorView: View {
-    // @EnvironmentObject: نفس الـ ViewModel اللي أنشأناه في SplashView، يوصل هنا تلقائياً
     @EnvironmentObject var viewModel: JournalViewModel
     // dismiss: دالة من النظام تسكّر الشيت
     @Environment(\.dismiss) private var dismiss
     // context: الاتصال بالداتابيس (نحتاجه للإضافة)
     @Environment(\.modelContext) private var context
-
-    // Optional (?) يعني ممكن تكون فيها مذكرة أو تكون nil
     let journal: Journal?
 
     // @State: متغيرات خاصة بهالشاشة، أي تغيير فيها يعيد رسم الواجهة
-    @State private var title: String           // العنوان اللي يكتبه المستخدم
-    @State private var content: String         // المحتوى اللي يكتبه المستخدم
-    @State private var showDiscardAlert = false // هل نعرض تنبيه "Discard Changes"؟
+    @State private var title: String
+    @State private var content: String
+    @State private var showDiscardAlert = false
     // @FocusState: يتحكم وين يكون المؤشر (الكيبورد)
     @FocusState private var isTitleFocused: Bool
 
-    // init: يجهّز الشاشة
-    // إذا فيه مذكرة نعبي الخانات بعنوانها ومحتواها، وإذا nil نخليها فاضية
-    // (?? معناها: إذا القيمة nil استخدم اللي بعدها)
     init(journal: Journal?) {
         self.journal = journal
         _title = State(initialValue: journal?.title ?? "")

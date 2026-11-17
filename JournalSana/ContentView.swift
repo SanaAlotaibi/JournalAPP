@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// أول واجهة يعرضها التطبيق، وهي بس تعرض شاشة البداية (Splash)
 struct ContentView: View {
     var body: some View {
         SplashView()

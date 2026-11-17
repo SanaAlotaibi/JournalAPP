@@ -5,20 +5,10 @@
 //  Created by Sana Alotaibi on 02/06/1448 AH.
 //
 import SwiftUI
-
-// ─────────────────────────────────────────────
-// شاشة البداية (Splash)
-// تعرض شعار التطبيق ثانيتين، وبعدها تنتقل للصفحة الرئيسية
-// ─────────────────────────────────────────────
 struct SplashView: View {
-    // false = نعرض السبلاش، true = نعرض الصفحة الرئيسية
     @State private var isActive = false
-
-    // @StateObject: هنا ننشئ الـ ViewModel مرة وحدة بس، ويعيش طول عمر التطبيق
-    // وبعدها نمرّره للصفحات الثانية بـ environmentObject
     @StateObject private var viewModel = JournalViewModel()
 
-    // body: يختار وش يعرض حسب isActive
     var body: some View {
         ZStack {
             if isActive {
@@ -32,8 +22,6 @@ struct SplashView: View {
             }
         }
         .preferredColorScheme(.dark)
-        // task: يشتغل أول ما تظهر الشاشة
-        // ينتظر ثانيتين (async/await) وبعدها يغيّر isActive مع أنيميشن تلاشي
         .task {
             try? await Task.sleep(for: .seconds(2))
             withAnimation(.easeInOut(duration: 0.5)) {
