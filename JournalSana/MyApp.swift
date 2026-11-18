@@ -1,7 +1,6 @@
 import SwiftUI
 import SwiftData
 
-// @main: نقطة بداية التطبيق، أول شي يشتغل
 @main struct MyApp: App {
     var body: some Scene {
         WindowGroup {
